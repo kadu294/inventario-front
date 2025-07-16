@@ -1,23 +1,33 @@
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const [machines, setMachines] = useState([]);
+  const apiUrl = process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    fetch(`${apiUrl}/machines`)
+      .then(res => res.json())
+      .then(data => setMachines(data))
+      .catch(err => console.error(err));
+  }, [apiUrl]);
+
+  const handleButtonClick = () => {
+    window.open(`${apiUrl}/machines`, '_blank');
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Inventário Front</h1>
+      <button onClick={handleButtonClick}>
+        Ver requisição /machines
+      </button>
+      <ul>
+        {machines.map((machine, idx) => (
+          <li key={idx}>{JSON.stringify(machine)}</li>
+        ))}
+      </ul>
     </div>
   );
 }
